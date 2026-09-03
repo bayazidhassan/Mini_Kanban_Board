@@ -9,5 +9,10 @@ router.post(
   authenticate,
   taskController.createTask,
 );
+router.get(
+  '/:boardId/columns/:columnId/tasks',
+  authenticate,
+  taskController.getTasks,
+);
 
 export const taskRoutes = router;

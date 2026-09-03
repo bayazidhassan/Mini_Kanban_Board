@@ -65,6 +65,51 @@ const createTask = async (
   return result;
 };
 
+const getTasks = async (boardId: string, columnId: string, userId: string) => {
+  const board = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+    include: {
+      members: {
+        where: {
+          userId,
+        },
+      },
+    },
+  });
+  if (!board) {
+    throw new AppError(404, 'Board not found.');
+  }
+
+  const hasAccess = board.ownerId === userId || board.members.length > 0;
+  if (!hasAccess) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const column = await prisma.column.findFirst({
+    where: {
+      id: columnId,
+      boardId,
+    },
+  });
+  if (!column) {
+    throw new AppError(404, 'Column not found.');
+  }
+
+  const result = await prisma.task.findMany({
+    where: {
+      columnId,
+    },
+    orderBy: {
+      position: 'asc',
+    },
+  });
+
+  return result;
+};
+
 export const taskService = {
   createTask,
+  getTasks,
 };

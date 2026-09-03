@@ -16,6 +16,21 @@ const createTask = catchAsync(async (req, res) => {
   });
 });
 
+const getTasks = catchAsync(async (req, res) => {
+  const result = await taskService.getTasks(
+    req.params.boardId as string,
+    req.params.columnId as string,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Tasks retrieved successfully.',
+    data: result,
+  });
+});
+
 export const taskController = {
   createTask,
+  getTasks,
 };
