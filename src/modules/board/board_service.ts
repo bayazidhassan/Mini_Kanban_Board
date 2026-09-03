@@ -1,3 +1,4 @@
+import AppError from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
 
 const createBoard = async (
@@ -22,6 +23,10 @@ const getABoard = async (id: string) => {
     },
   });
 
+  if (!result) {
+    throw new AppError(404, 'Board not found.');
+  }
+
   return result;
 };
 
@@ -32,6 +37,40 @@ const getMyBoards = async (ownerId: string) => {
     },
   });
 
+  if (!result.length) {
+    throw new AppError(404, 'Boards not found.');
+  }
+
+  return result;
+};
+
+const updateBoard = async (
+  boardId: string,
+  payload: { name: string; description?: string },
+  ownerId: string,
+) => {
+  const existingBoard = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+  if (!existingBoard) {
+    throw new AppError(404, 'Board not found.');
+  }
+  if (existingBoard.ownerId !== ownerId) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const result = await prisma.board.update({
+    where: {
+      id: boardId,
+    },
+    data: {
+      name: payload.name,
+      description: payload.description,
+    },
+  });
+
   return result;
 };
 
@@ -39,4 +78,5 @@ export const boardService = {
   createBoard,
   getABoard,
   getMyBoards,
+  updateBoard,
 };
