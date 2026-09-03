@@ -29,7 +29,22 @@ const getColumns = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getColumn = catchAsync(async (req: Request, res: Response) => {
+  const result = await columnService.getColumn(
+    req.params.boardId as string,
+    req.params.id as string,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Column retrieved successfully.',
+    data: result,
+  });
+});
+
 export const columnController = {
   createColumn,
   getColumns,
+  getColumn,
 };
