@@ -8,5 +8,6 @@ router.post('/', authenticate, boardController.createBoard);
 router.get('/', authenticate, boardController.getMyBoards);
 router.get('/:id', authenticate, boardController.getABoard);
 router.patch('/:id', authenticate, boardController.updateBoard);
+router.delete('/:id', authenticate, boardController.deleteBoard);
 
 export const boardRoutes = router;

@@ -45,9 +45,23 @@ const updateBoard = catchAsync(async (req, res) => {
   });
 });
 
+const deleteBoard = catchAsync(async (req, res) => {
+  const result = await boardService.deleteBoard(
+    req.params.id as string,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Board deleted successfully.',
+    data: result,
+  });
+});
+
 export const boardController = {
   createBoard,
   getABoard,
   getMyBoards,
   updateBoard,
+  deleteBoard,
 };
