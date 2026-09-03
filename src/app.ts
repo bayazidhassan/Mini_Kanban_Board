@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import notFoundRoute from './middlewares/notFoundRoute';
 
 const app = express();
 
@@ -15,5 +16,7 @@ app.use(
 app.get('/', (req, res) => {
   res.send('Hello Kanban Board!');
 });
+
+app.use(notFoundRoute);
 
 export default app;
