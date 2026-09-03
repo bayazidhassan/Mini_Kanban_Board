@@ -15,6 +15,17 @@ const createBoard = async (
   return result;
 };
 
+const getMyBoards = async (ownerId: string) => {
+  const result = await prisma.board.findMany({
+    where: {
+      ownerId,
+    },
+  });
+
+  return result;
+};
+
 export const boardService = {
   createBoard,
+  getMyBoards,
 };
