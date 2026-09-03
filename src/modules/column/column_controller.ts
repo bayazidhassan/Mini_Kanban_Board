@@ -1,8 +1,7 @@
-import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import { columnService } from './column_service';
 
-const createColumn = catchAsync(async (req: Request, res: Response) => {
+const createColumn = catchAsync(async (req, res) => {
   const result = await columnService.createColumn(
     req.params.boardId as string,
     req.body,
@@ -16,7 +15,7 @@ const createColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getColumns = catchAsync(async (req: Request, res: Response) => {
+const getColumns = catchAsync(async (req, res) => {
   const result = await columnService.getColumns(
     req.params.boardId as string,
     req.user.id,
@@ -29,7 +28,7 @@ const getColumns = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getColumn = catchAsync(async (req: Request, res: Response) => {
+const getColumn = catchAsync(async (req, res) => {
   const result = await columnService.getColumn(
     req.params.boardId as string,
     req.params.id as string,
@@ -43,7 +42,7 @@ const getColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateColumn = catchAsync(async (req: Request, res: Response) => {
+const updateColumn = catchAsync(async (req, res) => {
   const result = await columnService.updateColumn(
     req.params.boardId as string,
     req.params.id as string,
@@ -58,7 +57,7 @@ const updateColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteColumn = catchAsync(async (req: Request, res: Response) => {
+const deleteColumn = catchAsync(async (req, res) => {
   await columnService.deleteColumn(
     req.params.boardId as string,
     req.params.id as string,
