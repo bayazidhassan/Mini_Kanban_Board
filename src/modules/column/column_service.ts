@@ -117,8 +117,49 @@ const getColumn = async (boardId: string, columnId: string, userId: string) => {
   return result;
 };
 
+const updateColumn = async (
+  boardId: string,
+  columnId: string,
+  payload: { name: string },
+  userId: string,
+) => {
+  const board = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+  if (!board) {
+    throw new AppError(404, 'Board not found.');
+  }
+  if (board.ownerId !== userId) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const existingColumn = await prisma.column.findFirst({
+    where: {
+      id: columnId,
+      boardId,
+    },
+  });
+  if (!existingColumn) {
+    throw new AppError(404, 'Column not found.');
+  }
+
+  const result = await prisma.column.update({
+    where: {
+      id: columnId,
+    },
+    data: {
+      name: payload.name,
+    },
+  });
+
+  return result;
+};
+
 export const columnService = {
   createColumn,
   getColumns,
   getColumn,
+  updateColumn,
 };

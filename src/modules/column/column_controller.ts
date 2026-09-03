@@ -43,8 +43,24 @@ const getColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateColumn = catchAsync(async (req: Request, res: Response) => {
+  const result = await columnService.updateColumn(
+    req.params.boardId as string,
+    req.params.id as string,
+    req.body,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Column updated successfully.',
+    data: result,
+  });
+});
+
 export const columnController = {
   createColumn,
   getColumns,
   getColumn,
+  updateColumn,
 };
