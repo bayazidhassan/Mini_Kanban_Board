@@ -45,8 +45,25 @@ const getATask = catchAsync(async (req, res) => {
   });
 });
 
+const updateTask = catchAsync(async (req, res) => {
+  const result = await taskService.updateTask(
+    req.params.boardId as string,
+    req.params.columnId as string,
+    req.params.id as string,
+    req.body,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Task updated successfully.',
+    data: result,
+  });
+});
+
 export const taskController = {
   createTask,
   getTasks,
   getATask,
+  updateTask,
 };

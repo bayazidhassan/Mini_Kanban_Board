@@ -19,5 +19,10 @@ router.get(
   authenticate,
   taskController.getATask,
 );
+router.patch(
+  '/:boardId/columns/:columnId/tasks/:id',
+  authenticate,
+  taskController.updateTask,
+);
 
 export const taskRoutes = router;
