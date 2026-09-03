@@ -24,5 +24,10 @@ router.patch(
   authenticate,
   taskController.updateTask,
 );
+router.delete(
+  '/:boardId/columns/:columnId/tasks/:id',
+  authenticate,
+  taskController.deleteTask,
+);
 
 export const taskRoutes = router;

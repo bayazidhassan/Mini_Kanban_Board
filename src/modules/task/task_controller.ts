@@ -61,9 +61,21 @@ const updateTask = catchAsync(async (req, res) => {
   });
 });
 
+const deleteTask = catchAsync(async (req, res) => {
+  await taskService.deleteTask(
+    req.params.boardId as string,
+    req.params.columnId as string,
+    req.params.id as string,
+    req.user.id,
+  );
+
+  res.status(204).send();
+});
+
 export const taskController = {
   createTask,
   getTasks,
   getATask,
   updateTask,
+  deleteTask,
 };
