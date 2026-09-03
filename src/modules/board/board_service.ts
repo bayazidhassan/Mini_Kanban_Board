@@ -150,6 +150,55 @@ const addMemberToBoard = async (
   return result;
 };
 
+const removeMemberFromBoard = async (
+  boardId: string,
+  ownerId: string,
+  payload: { email: string },
+) => {
+  const existingBoard = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+  if (!existingBoard) {
+    throw new AppError(404, 'Board not found.');
+  }
+  if (existingBoard.ownerId !== ownerId) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: payload.email,
+    },
+  });
+  if (!existingUser) {
+    throw new AppError(404, 'User not found.');
+  }
+
+  const existingMember = await prisma.boardMember.findUnique({
+    where: {
+      boardId_userId: {
+        boardId,
+        userId: existingUser.id,
+      },
+    },
+  });
+  if (!existingMember) {
+    throw new AppError(404, 'Not a board member.');
+  }
+
+  const result = await prisma.boardMember.delete({
+    where: {
+      boardId_userId: {
+        boardId,
+        userId: existingUser.id,
+      },
+    },
+  });
+  return result;
+};
+
 export const boardService = {
   createBoard,
   getABoard,
@@ -157,4 +206,5 @@ export const boardService = {
   updateBoard,
   deleteBoard,
   addMemberToBoard,
+  removeMemberFromBoard,
 };

@@ -11,5 +11,10 @@ router.patch('/:id', authenticate, boardController.updateBoard);
 router.delete('/:id', authenticate, boardController.deleteBoard);
 
 router.post('/add-member/:id', authenticate, boardController.addMemberToBoard);
+router.delete(
+  '/remove-member/:id',
+  authenticate,
+  boardController.removeMemberFromBoard,
+);
 
 export const boardRoutes = router;
