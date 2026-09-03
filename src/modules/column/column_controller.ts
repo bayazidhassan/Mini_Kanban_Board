@@ -16,6 +16,20 @@ const createColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getColumns = catchAsync(async (req: Request, res: Response) => {
+  const result = await columnService.getColumns(
+    req.params.boardId as string,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Columns retrieved successfully.',
+    data: result,
+  });
+});
+
 export const columnController = {
   createColumn,
+  getColumns,
 };
