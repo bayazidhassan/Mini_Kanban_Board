@@ -14,5 +14,10 @@ router.get(
   authenticate,
   taskController.getTasks,
 );
+router.get(
+  '/:boardId/columns/:columnId/tasks/:id',
+  authenticate,
+  taskController.getATask,
+);
 
 export const taskRoutes = router;
