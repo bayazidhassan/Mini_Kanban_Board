@@ -11,6 +11,16 @@ const createBoard = catchAsync(async (req, res) => {
   });
 });
 
+const getABoard = catchAsync(async (req, res) => {
+  const result = await boardService.getABoard(req.params.id as string);
+
+  res.status(200).json({
+    success: true,
+    message: 'Board retrieved successfully.',
+    data: result,
+  });
+});
+
 const getMyBoards = catchAsync(async (req, res) => {
   const result = await boardService.getMyBoards(req.user.id);
 
@@ -23,5 +33,6 @@ const getMyBoards = catchAsync(async (req, res) => {
 
 export const boardController = {
   createBoard,
+  getABoard,
   getMyBoards,
 };
