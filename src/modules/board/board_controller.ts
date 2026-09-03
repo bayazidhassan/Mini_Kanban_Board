@@ -58,10 +58,25 @@ const deleteBoard = catchAsync(async (req, res) => {
   });
 });
 
+const addMemberToBoard = catchAsync(async (req, res) => {
+  const result = await boardService.addMemberToBoard(
+    req.params.id as string,
+    req.user.id,
+    req.body,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Member added to board successfully.',
+    data: result,
+  });
+});
+
 export const boardController = {
   createBoard,
   getABoard,
   getMyBoards,
   updateBoard,
   deleteBoard,
+  addMemberToBoard,
 };
