@@ -58,9 +58,20 @@ const updateColumn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteColumn = catchAsync(async (req: Request, res: Response) => {
+  await columnService.deleteColumn(
+    req.params.boardId as string,
+    req.params.id as string,
+    req.user.id,
+  );
+
+  res.status(204).send();
+});
+
 export const columnController = {
   createColumn,
   getColumns,
   getColumn,
   updateColumn,
+  deleteColumn,
 };

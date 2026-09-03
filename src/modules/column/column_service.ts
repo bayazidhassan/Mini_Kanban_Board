@@ -157,9 +157,44 @@ const updateColumn = async (
   return result;
 };
 
+const deleteColumn = async (
+  boardId: string,
+  columnId: string,
+  userId: string,
+) => {
+  const board = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+  if (!board) {
+    throw new AppError(404, 'Board not found.');
+  }
+  if (board.ownerId !== userId) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const existingColumn = await prisma.column.findFirst({
+    where: {
+      id: columnId,
+      boardId,
+    },
+  });
+  if (!existingColumn) {
+    throw new AppError(404, 'Column not found.');
+  }
+
+  await prisma.column.delete({
+    where: {
+      id: columnId,
+    },
+  });
+};
+
 export const columnService = {
   createColumn,
   getColumns,
   getColumn,
   updateColumn,
+  deleteColumn,
 };

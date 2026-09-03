@@ -12,5 +12,10 @@ router.patch(
   authenticate,
   columnController.updateColumn,
 );
+router.delete(
+  '/:boardId/columns/:id',
+  authenticate,
+  columnController.deleteColumn,
+);
 
 export const columnRoutes = router;
