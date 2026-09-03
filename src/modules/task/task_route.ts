@@ -29,5 +29,10 @@ router.delete(
   authenticate,
   taskController.deleteTask,
 );
+router.patch(
+  '/:boardId/tasks/:taskId/move',
+  authenticate,
+  taskController.moveTask,
+);
 
 export const taskRoutes = router;
