@@ -1,9 +1,7 @@
-const page = () => {
-  return (
-    <div>
-      <h1>It is login page</h1>
-    </div>
-  );
+import LoginForm from '@/components/auth/LoginForm';
+
+const LoginPage = () => {
+  return <LoginForm />;
 };
 
-export default page;
+export default LoginPage;
