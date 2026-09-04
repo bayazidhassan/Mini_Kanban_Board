@@ -1,9 +1,7 @@
-const page = () => {
-  return (
-    <div>
-      <h1>Its is dashboard</h1>
-    </div>
-  );
+import DashboardContent from '@/components/dashboard/DashboardContent';
+
+const DashboardPage = () => {
+  return <DashboardContent />;
 };
 
-export default page;
+export default DashboardPage;
