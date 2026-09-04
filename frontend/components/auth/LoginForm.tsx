@@ -1,19 +1,46 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { api } from '@/lib/api';
+
+type LoginResponse = {
+  data: {
+    accessToken: string;
+  };
+};
+
 const LoginForm = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log({
-      email,
-      password,
-    });
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await api.post<LoginResponse>('/auth/login', {
+        email,
+        password,
+      });
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+
+      router.push('/dashboard');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,11 +81,14 @@ const LoginForm = () => {
             />
           </div>
 
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
           <button
             type="submit"
-            className="w-full rounded bg-black px-4 py-2 text-white"
+            disabled={loading}
+            className="w-full rounded bg-black px-4 py-2 text-white disabled:opacity-50"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 

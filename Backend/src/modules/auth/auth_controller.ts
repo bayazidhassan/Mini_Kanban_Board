@@ -11,6 +11,17 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
+const getSession = catchAsync(async (req, res) => {
+  const user = await authService.getSession(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    message: 'Session retrieved successfully',
+    data: user,
+  });
+});
+
 export const authController = {
   loginUser,
+  getSession,
 };
