@@ -1,8 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-
-import { api } from '@/lib/api';
+import { useEffect } from 'react';
 
 import TaskCard from './TaskCard';
 
@@ -16,49 +14,15 @@ type Task = {
   updatedAt: string;
 };
 
-type TasksResponse = {
-  data: Task[];
-};
-
 type TaskListProps = {
   boardId: string;
-  columnId: string;
+  tasks: Task[];
 };
 
-const TaskList = ({ boardId, columnId }: TaskListProps) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const fetchTasks = useCallback(async () => {
-    try {
-      const response = await api.get<TasksResponse>(
-        `/boards/${boardId}/columns/${columnId}/tasks`,
-      );
-
-      setTasks(response.data);
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : 'Failed to fetch tasks',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [boardId, columnId]);
-
+const TaskList = ({ boardId, tasks }: TaskListProps) => {
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTasks();
-  }, [fetchTasks]);
-
-  if (loading) {
-    return <p className="text-sm">Loading tasks...</p>;
-  }
-
-  if (error) {
-    return <p className="text-sm text-red-500">{error}</p>;
-  }
+    // Tasks are loaded by ColumnList.
+  }, []);
 
   if (!tasks.length) {
     return <p className="text-sm text-gray-500">No tasks yet.</p>;
@@ -71,8 +35,8 @@ const TaskList = ({ boardId, columnId }: TaskListProps) => {
           key={task.id}
           task={task}
           boardId={boardId}
-          onTaskUpdated={fetchTasks}
-          onTaskDeleted={fetchTasks}
+          onTaskUpdated={() => {}}
+          onTaskDeleted={() => {}}
         />
       ))}
     </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import { api } from '@/lib/api';
+import { useSortable } from '@dnd-kit/sortable';
+import { useState } from 'react';
 
 type Task = {
   id: string;
@@ -34,6 +34,14 @@ const TaskCard = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: task.id,
+      data: {
+        columnId: task.columnId,
+      },
+    });
 
   const handleUpdate = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -135,7 +143,18 @@ const TaskCard = ({
   }
 
   return (
-    <div className="rounded border p-3">
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
+        transition,
+      }}
+      {...listeners}
+      {...attributes}
+      className="rounded-lg border p-3"
+    >
       <h4 className="font-medium">{task.title}</h4>
 
       {task.description && (

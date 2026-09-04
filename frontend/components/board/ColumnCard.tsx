@@ -1,5 +1,7 @@
 'use client';
 
+import { useDroppable } from '@dnd-kit/core';
+
 import { useState } from 'react';
 
 import { api } from '@/lib/api';
@@ -16,22 +18,43 @@ type Column = {
   updatedAt: string;
 };
 
+type Task = {
+  id: string;
+  title: string;
+  description?: string | null;
+  position: number;
+  columnId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type ColumnCardProps = {
   column: Column;
+  tasks: Task[];
   onColumnUpdated: () => void;
   onColumnDeleted: () => void;
 };
 
 const ColumnCard = ({
   column,
+  tasks,
   onColumnUpdated,
   onColumnDeleted,
 }: ColumnCardProps) => {
+  const { setNodeRef } = useDroppable({
+    id: column.id,
+    data: {
+      type: 'column',
+      columnId: column.id,
+    },
+  });
+
   const [editing, setEditing] = useState(false);
 
   const [name, setName] = useState(column.name);
 
   const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState('');
 
   const [taskRefreshKey, setTaskRefreshKey] = useState(0);
@@ -123,7 +146,7 @@ const ColumnCard = ({
   }
 
   return (
-    <div className="min-w-72 rounded-lg border p-4">
+    <div ref={setNodeRef} className="min-w-72 rounded-lg border p-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">{column.name}</h3>
 
@@ -156,11 +179,7 @@ const ColumnCard = ({
           onTaskCreated={handleTaskCreated}
         />
 
-        <TaskList
-          key={taskRefreshKey}
-          boardId={column.boardId}
-          columnId={column.id}
-        />
+        <TaskList key={taskRefreshKey} boardId={column.boardId} tasks={tasks} />
       </div>
     </div>
   );
