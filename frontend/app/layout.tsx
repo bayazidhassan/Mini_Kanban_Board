@@ -3,13 +3,15 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Mini Kanban Board',
-  description: 'Developed by Bayazid Hassan',
+  description: 'Mini Kanban Board - Developed by Bayazid Hassan',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <div className="min-h-screen">{children}</div>
+      </body>
     </html>
   );
 }
