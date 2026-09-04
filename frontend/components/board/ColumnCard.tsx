@@ -4,6 +4,9 @@ import { useState } from 'react';
 
 import { api } from '@/lib/api';
 
+import CreateTaskForm from './CreateTaskForm';
+import TaskList from './TaskList';
+
 type Column = {
   id: string;
   name: string;
@@ -30,6 +33,12 @@ const ColumnCard = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [taskRefreshKey, setTaskRefreshKey] = useState(0);
+
+  const handleTaskCreated = () => {
+    setTaskRefreshKey((previous) => previous + 1);
+  };
 
   const handleUpdate = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,7 +90,7 @@ const ColumnCard = ({
 
   if (editing) {
     return (
-      <form onSubmit={handleUpdate} className="min-w-64 rounded-lg border p-4">
+      <form onSubmit={handleUpdate} className="min-w-72 rounded-lg border p-4">
         <input
           type="text"
           value={name}
@@ -114,28 +123,44 @@ const ColumnCard = ({
   }
 
   return (
-    <div className="min-w-64 rounded-lg border p-4">
-      <h3 className="font-semibold">{column.name}</h3>
+    <div className="min-w-72 rounded-lg border p-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold">{column.name}</h3>
+
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="rounded border px-2 py-1 text-xs"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading}
+            className="rounded border px-2 py-1 text-xs text-red-500 disabled:opacity-50"
+          >
+            {loading ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
+      </div>
 
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
 
-      <div className="mt-4 flex gap-2">
-        <button
-          type="button"
-          onClick={() => setEditing(true)}
-          className="rounded border px-3 py-2 text-sm"
-        >
-          Edit
-        </button>
+      <div className="mt-4">
+        <CreateTaskForm
+          boardId={column.boardId}
+          columnId={column.id}
+          onTaskCreated={handleTaskCreated}
+        />
 
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={loading}
-          className="rounded border px-3 py-2 text-sm text-red-500 disabled:opacity-50"
-        >
-          {loading ? 'Deleting...' : 'Delete'}
-        </button>
+        <TaskList
+          key={taskRefreshKey}
+          boardId={column.boardId}
+          columnId={column.id}
+        />
       </div>
     </div>
   );
