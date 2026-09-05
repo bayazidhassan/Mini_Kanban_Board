@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-    "build": "prisma generate && tsc",
+    "build": "tsc",
     "start:prod": "node dist/server.js"
   },
   "keywords": [],
