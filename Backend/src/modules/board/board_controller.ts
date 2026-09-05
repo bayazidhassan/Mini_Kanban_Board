@@ -34,6 +34,19 @@ const getMyBoards = catchAsync(async (req, res) => {
   });
 });
 
+const getBoardMembers = catchAsync(async (req, res) => {
+  const result = await boardService.getBoardMembers(
+    req.params.id as string,
+    req.user.id,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Board members retrieved successfully.',
+    data: result,
+  });
+});
+
 const updateBoard = catchAsync(async (req, res) => {
   const result = await boardService.updateBoard(
     req.params.id as string,
@@ -93,6 +106,7 @@ export const boardController = {
   createBoard,
   getABoard,
   getMyBoards,
+  getBoardMembers,
   updateBoard,
   deleteBoard,
   addMemberToBoard,

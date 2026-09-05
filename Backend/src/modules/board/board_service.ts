@@ -70,6 +70,44 @@ const getMyBoards = async (userId: string) => {
   return result;
 };
 
+const getBoardMembers = async (
+  boardId: string,
+
+  ownerId: string,
+) => {
+  const existingBoard = await prisma.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+  if (!existingBoard) {
+    throw new AppError(404, 'Board not found.');
+  }
+  if (existingBoard.ownerId !== ownerId) {
+    throw new AppError(403, 'Unauthorized.');
+  }
+
+  const result = await prisma.boardMember.findMany({
+    where: {
+      boardId,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  return result;
+};
+
 const updateBoard = async (
   boardId: string,
   payload: { name: string; description?: string },
@@ -229,6 +267,7 @@ export const boardService = {
   createBoard,
   getABoard,
   getMyBoards,
+  getBoardMembers,
   updateBoard,
   deleteBoard,
   addMemberToBoard,

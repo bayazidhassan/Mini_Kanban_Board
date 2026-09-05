@@ -7,6 +7,7 @@ const router = Router();
 router.post('/', authenticate, boardController.createBoard);
 router.get('/', authenticate, boardController.getMyBoards);
 
+router.get('/members/:id', authenticate, boardController.getBoardMembers);
 router.post('/add-member/:id', authenticate, boardController.addMemberToBoard);
 router.delete(
   '/remove-member/:id',
