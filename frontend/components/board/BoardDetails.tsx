@@ -1,13 +1,27 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
-import { useCallback, useEffect, useState } from 'react';
-
 import { api } from '@/lib/api';
-
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import BoardMembers from './BoardMembers';
 import ColumnList from './ColumnList';
 import CreateColumnForm from './CreateColumnForm';
+
+const getCurrentUserId = () => {
+  const token = localStorage.getItem('accessToken');
+
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    return payload.userId as string;
+  } catch {
+    return null;
+  }
+};
 
 type Board = {
   id: string;
@@ -33,6 +47,10 @@ const BoardDetails = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const currentUserId = getCurrentUserId();
+
+  const isOwner = currentUserId === board?.ownerId;
 
   const fetchBoard = useCallback(async () => {
     try {
@@ -89,6 +107,7 @@ const BoardDetails = () => {
 
         <ColumnList key={refreshKey} boardId={board.id} />
       </div>
+      {isOwner && <BoardMembers boardId={board.id} />}
     </div>
   );
 };

@@ -33,8 +33,13 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  delete: <T = unknown>(endpoint: string) =>
+  delete: <T = unknown>(
+    endpoint: string,
+
+    data?: unknown,
+  ) =>
     fetchClient<T>(endpoint, {
       method: 'DELETE',
+      body: JSON.stringify(data),
     }),
 };
