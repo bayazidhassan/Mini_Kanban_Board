@@ -12,7 +12,10 @@ const createBoard = catchAsync(async (req, res) => {
 });
 
 const getABoard = catchAsync(async (req, res) => {
-  const result = await boardService.getABoard(req.params.id as string);
+  const result = await boardService.getABoard(
+    req.params.id as string,
+    req.user.id,
+  );
 
   res.status(200).json({
     success: true,

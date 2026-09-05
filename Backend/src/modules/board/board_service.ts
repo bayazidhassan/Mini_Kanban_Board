@@ -16,10 +16,24 @@ const createBoard = async (
   return result;
 };
 
-const getABoard = async (id: string) => {
-  const result = await prisma.board.findUnique({
+const getABoard = async (id: string, userId: string) => {
+  const result = await prisma.board.findFirst({
     where: {
       id,
+
+      OR: [
+        {
+          ownerId: userId,
+        },
+
+        {
+          members: {
+            some: {
+              userId,
+            },
+          },
+        },
+      ],
     },
   });
 
@@ -30,10 +44,22 @@ const getABoard = async (id: string) => {
   return result;
 };
 
-const getMyBoards = async (ownerId: string) => {
+const getMyBoards = async (userId: string) => {
   const result = await prisma.board.findMany({
     where: {
-      ownerId,
+      OR: [
+        {
+          ownerId: userId,
+        },
+
+        {
+          members: {
+            some: {
+              userId,
+            },
+          },
+        },
+      ],
     },
   });
 
