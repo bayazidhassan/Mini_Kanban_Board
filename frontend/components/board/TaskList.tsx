@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import TaskCard from './TaskCard';
 
 type Task = {
@@ -17,13 +15,16 @@ type Task = {
 type TaskListProps = {
   boardId: string;
   tasks: Task[];
+  onTaskUpdated: () => void;
+  onTaskDeleted: () => void;
 };
 
-const TaskList = ({ boardId, tasks }: TaskListProps) => {
-  useEffect(() => {
-    // Tasks are loaded by ColumnList.
-  }, []);
-
+const TaskList = ({
+  boardId,
+  tasks,
+  onTaskUpdated,
+  onTaskDeleted,
+}: TaskListProps) => {
   if (!tasks.length) {
     return <p className="text-sm text-gray-500">No tasks yet.</p>;
   }
@@ -35,8 +36,8 @@ const TaskList = ({ boardId, tasks }: TaskListProps) => {
           key={task.id}
           task={task}
           boardId={boardId}
-          onTaskUpdated={() => {}}
-          onTaskDeleted={() => {}}
+          onTaskUpdated={onTaskUpdated}
+          onTaskDeleted={onTaskDeleted}
         />
       ))}
     </div>

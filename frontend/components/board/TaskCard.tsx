@@ -38,6 +38,7 @@ const TaskCard = ({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: task.id,
+
       data: {
         columnId: task.columnId,
       },
@@ -52,6 +53,7 @@ const TaskCard = ({
     try {
       await api.patch(
         `/boards/${boardId}/columns/${task.columnId}/tasks/${task.id}`,
+
         {
           title,
           description,
@@ -151,10 +153,16 @@ const TaskCard = ({
           : undefined,
         transition,
       }}
-      {...listeners}
-      {...attributes}
       className="rounded-lg border p-3"
     >
+      <div
+        {...listeners}
+        {...attributes}
+        className="mb-2 cursor-grab text-xs text-gray-400"
+      >
+        Drag
+      </div>
+
       <h4 className="font-medium">{task.title}</h4>
 
       {task.description && (

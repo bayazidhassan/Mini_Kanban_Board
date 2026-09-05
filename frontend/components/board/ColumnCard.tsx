@@ -57,10 +57,16 @@ const ColumnCard = ({
 
   const [error, setError] = useState('');
 
-  const [taskRefreshKey, setTaskRefreshKey] = useState(0);
-
   const handleTaskCreated = () => {
-    setTaskRefreshKey((previous) => previous + 1);
+    onColumnUpdated();
+  };
+
+  const handleTaskUpdated = () => {
+    onColumnUpdated();
+  };
+
+  const handleTaskDeleted = () => {
+    onColumnUpdated();
   };
 
   const handleUpdate = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -179,7 +185,12 @@ const ColumnCard = ({
           onTaskCreated={handleTaskCreated}
         />
 
-        <TaskList key={taskRefreshKey} boardId={column.boardId} tasks={tasks} />
+        <TaskList
+          boardId={column.boardId}
+          tasks={tasks}
+          onTaskUpdated={handleTaskUpdated}
+          onTaskDeleted={handleTaskDeleted}
+        />
       </div>
     </div>
   );
