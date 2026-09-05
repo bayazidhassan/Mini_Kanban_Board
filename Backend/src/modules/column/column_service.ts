@@ -127,11 +127,20 @@ const updateColumn = async (
     where: {
       id: boardId,
     },
+    include: {
+      members: {
+        where: {
+          userId,
+        },
+      },
+    },
   });
   if (!board) {
     throw new AppError(404, 'Board not found.');
   }
-  if (board.ownerId !== userId) {
+
+  const hasAccess = board.ownerId === userId || board.members.length > 0;
+  if (!hasAccess) {
     throw new AppError(403, 'Unauthorized.');
   }
 
@@ -166,11 +175,21 @@ const deleteColumn = async (
     where: {
       id: boardId,
     },
+
+    include: {
+      members: {
+        where: {
+          userId,
+        },
+      },
+    },
   });
   if (!board) {
     throw new AppError(404, 'Board not found.');
   }
-  if (board.ownerId !== userId) {
+
+  const hasAccess = board.ownerId === userId || board.members.length > 0;
+  if (!hasAccess) {
     throw new AppError(403, 'Unauthorized.');
   }
 
